@@ -57,7 +57,7 @@
         font-weight: 700;
         border-bottom: 1px solid #949494
     }
-    .bounce-enter-active {
+  /*  .bounce-enter-active {
         animation: bounce-in .5s;
     }
     .bounce-leave-active {
@@ -73,6 +73,26 @@
         100% {
             transform: scale(1);
         }
+    }*/
+    .pingyi-enter-active{
+        animation: pingyi .5s;
+    }
+    .pingyi-leave-active{
+        animation: pingyi .5s;
+    }
+    @keyframes pingyi {
+        0% {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        50% {
+            transform: translateX(100px);
+            opacity: 0.5;
+        }
+        100% {
+            transform: translateX(100px);
+            opacity: 0;
+        }
     }
 </style>
 <body>
@@ -85,19 +105,23 @@
             </div>
         </div>
     </div>-->
-    <my-asside></my-asside>
-    <my-asside></my-asside>
-    <my-asside></my-asside>
-    <my-asside></my-asside>
+    <my-asside :content="content"></my-asside>
+    <my-asside :content="contentOne"></my-asside>
 </div>
 </body>
 <script>
     Vue.component("my-asside",{
+        props:{
+            content:{
+                type:Array,
+                required:true,
+            }
+        },
         template:` <div class="assideBox">
-        <div class="asside" v-for="item in con">
+        <div class="asside" v-for="item in this.con">
             <div class="one" @click="show(item)">{{item.title}}</div>
-           <transition name="bounce">
-            <div class="twoBox" v-show="item.state">
+            <transition name="pingyi" >
+            <div class="twoBox" v-if="item.son" v-show="item.state">
                 <div class="two" v-for="itemTwo in item.son">{{itemTwo.title}}</div>
             </div>
             </transition>
@@ -105,23 +129,22 @@
     </div>`,
         data:function () {
             return{
-                con:[{title:"一级菜单",state:true,son:[{title:"二级菜单"},{title:"二级菜单"},{title:"二级菜单"},{title:"二级菜单"},{title:"二级菜单"}]},{title:"一级菜单",state:true,son:[{title:"二级菜单"},{title:"二级菜单"},{title:"二级菜单"}]}],
-                state:"true",
+                con:this.content,
             }
         },
         methods:{
             show(item){
-                if(item.state){
-                    item.state = false;
-                }else{
-                    item.state = true;
-                }
+                item.state = !item.state;
             }
         }
     })
 
     new Vue({
         el:"#view",
+        data:{
+            content:[{title:"一级菜单",state:1,son:[{title:"二级菜单"},{title:"二级菜单"},{title:"二级菜单"},{title:"二级菜单"},{title:"二级菜单"}]},{title:"一级菜单",state:1,son:[{title:"二级菜单"},{title:"二级菜单"},{title:"二级菜单"}]},{title:"一级菜单",state:0}],
+            contentOne:[{title:"前端技术",state:1,son:[{title:"html"},{title:"css"},{title:"javascript"},{title:"bootstrap"},{title:"vue"}]},{title:"后台技术",state:1,son:[{title:"php"},{title:"mysql"},{title:"java"}]}],
+        }
     })
 </script>
 </html>
